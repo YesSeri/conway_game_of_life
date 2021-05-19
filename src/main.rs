@@ -137,14 +137,14 @@ struct Game {
 }
 impl Game {
     fn new(time: u32, size: usize) -> Self {
-        // let vector = vec![vec![false; size]; size];
-        let flipper_vector = vec![
-            vec![false, false, false],
-            vec![true, true, true],
-            vec![false, false, false],
-        ];
+        let vector = vec![vec![false; size]; size];
+        // let flipper_vector = vec![
+        //     vec![false, false, false],
+        //     vec![true, true, true],
+        //     vec![false, false, false],
+        // ];
         Game {
-            board: Board::from(flipper_vector),
+            board: Board::from(vector),
             sleep_time: time,
         }
     }
@@ -174,11 +174,15 @@ fn main() {
     let mut game = Game::new(time.parse().unwrap(), size.parse().unwrap());
     loop {
         println!("{}", game);
-        println!("Enter position to flip.");
+        println!("Enter position to flip. They are zero indexed. Press c to continue");
+        println!("Col: ");
         let col = read_value();
-        println!("Enter position to flip.");
+        println!("Row: ");
+        if col == "c" {
+            break;
+        }
         let row = read_value();
-        if row == "c" || col == "c" {
+        if row == "c" {
             break;
         }
         let col = match col.parse::<usize>() {
