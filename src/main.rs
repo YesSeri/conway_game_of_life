@@ -1,46 +1,47 @@
 use std::fmt;
 use std::thread::sleep;
 use std::time::Duration;
+struct Point {
+    x: usize,
+    y: usize,
+}
+impl Point {
+    fn new(y: usize, x: usize) -> Self {
+        Point { x: x, y: y }
+    }
+}
 #[derive(Debug, Clone)]
 struct Board {
     positions: Vec<Vec<bool>>,
 }
 impl Board {
     fn tick(&mut self) {
-        let mut new_board = self.clone();
+        let mut flips: Vec<Point> = Vec::new();
         for i in 0..self.positions.len() {
             for j in 0..self.positions[i].len() {
-                new_board.positions[i][j] = self.new_state(i, j);
+                if self.flips_state(i, j) {
+                    flips.push(Point::new(j, i));
+                }
             }
         }
-        for i in 0..self.positions.len() {
-            for j in 0..self.positions[i].len() {
-                self.positions[i][j] = new_board.positions[i][j];
-            }
+        for point in flips {
+            self.positions[point.y][point.x] = !self.positions[point.y][point.x];
         }
     }
-    fn new_state(&mut self, i: usize, j: usize) -> bool {
+    fn flips_state(&self, i: usize, j: usize) -> bool {
         // Any live cell with fewer than two live neighbours dies, as if by underpopulation.
         // Any live cell with two or three live neighbours lives on to the next generation.
         // Any live cell with more than three live neighbours dies, as if by overpopulation.
         // Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+        // This can be shortened to the following:
+        // Live cell with less than two or more than three neighbours flips state. Dead cell with exactly three neighbours flip state.
+        // All other cells stays the same.
         let sum = self.sum_neighbours(i, j);
         let square = self.positions[i][j];
-        let new_value: bool;
-        if square {
-            if sum < 2 || sum > 3 {
-                new_value = false;
-            } else {
-                new_value = true;
-            }
-        } else {
-            if sum == 3 {
-                new_value = true;
-            } else {
-                new_value = false;
-            }
+        if (square && (sum < 2 || sum > 3)) || (!square && sum == 3) {
+            return true;
         }
-        return new_value;
+        false
     }
     fn sum_neighbours(&self, i: usize, j: usize) -> u8 {
         let mut squares_to_check = vec![true; 8];
@@ -136,9 +137,14 @@ struct Game {
 }
 impl Game {
     fn new(time: u32, size: usize) -> Self {
-        let vector = vec![vec![false; size]; size];
+        // let vector = vec![vec![false; size]; size];
+        let flipper_vector = vec![
+            vec![false, false, false],
+            vec![true, true, true],
+            vec![false, false, false],
+        ];
         Game {
-            board: Board::from(vector),
+            board: Board::from(flipper_vector),
             sleep_time: time,
         }
     }
@@ -175,11 +181,11 @@ fn main() {
         if row == "c" || col == "c" {
             break;
         }
-        let col = match col.parse::<usize>(){
+        let col = match col.parse::<usize>() {
             Ok(c) => c,
             Err(_) => continue,
         };
-        let row = match row.parse::<usize>(){
+        let row = match row.parse::<usize>() {
             Ok(c) => c,
             Err(_) => continue,
         };
