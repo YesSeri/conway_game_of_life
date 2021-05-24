@@ -34,7 +34,9 @@ impl Board {
         // All other cells stays the same.
         let sum = self.sum_neighbours(i, j);
         let square = self.positions[i][j];
-        if (square && (sum < 2 || sum > 3)) || (!square && sum == 3) {
+
+        // Clippy prefers this rather than the more readable: if (square && (sum < 2 || sum > 3)) || (!square && sum == 3)
+        if (square && !(2..=3).contains(&sum)) || (!square && sum == 3) {
             return true;
         }
         false
@@ -88,7 +90,7 @@ impl Board {
                 return sum;
             }
         }
-        return sum;
+        sum
     }
     // i is row, j is col
     fn get_value(&self, i: usize, j: usize) -> u8 {
@@ -96,7 +98,7 @@ impl Board {
         match self.positions.get(i) {
             Some(row) => match row.get(j) {
                 Some(square) => {
-                    if *square == true {
+                    if *square {
                         1
                     } else {
                         0
@@ -106,6 +108,31 @@ impl Board {
             },
             None => 0,
         }
+    }
+    pub fn print_with_idx(&self) {
+        let mut s = String::from("   ");
+        for i in 0..self.positions.get(0).unwrap().len() {
+            s += " ";
+            s += &i.to_string();
+            s += " ";
+        }
+        s += "\n";
+        for (i, v) in self.positions.iter().enumerate() {
+            if i != 0 {
+                s += "\n";
+            }
+            s += " ";
+            s += &i.to_string();
+            s += " ";
+            for p in v {
+                if *p {
+                    s += " X "
+                } else {
+                    s += " - "
+                }
+            }
+        }
+        println!("{}", s);
     }
 }
 impl From<Vec<Vec<bool>>> for Board {
@@ -120,7 +147,7 @@ impl fmt::Display for Board {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let mut s = String::new();
         for (i, v) in self.positions.iter().enumerate() {
-            if i > 0 {
+            if i != 0 {
                 s += "\n";
             }
             for p in v {

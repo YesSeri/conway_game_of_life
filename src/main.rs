@@ -1,6 +1,6 @@
 mod board;
-mod point;
 mod game;
+mod point;
 use game::Game;
 
 fn main() {

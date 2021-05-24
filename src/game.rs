@@ -44,7 +44,7 @@ impl Game {
     }
     pub fn setup_board(&mut self) {
         loop {
-            println!("{}", &self);
+            self.board.print_with_idx();
             println!("Enter position to flip. They are zero indexed. Press r to randomize. Press c to continue");
             println!("Col: ");
             let col = Game::read_value();
