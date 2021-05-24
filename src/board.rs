@@ -114,7 +114,9 @@ impl Board {
         for i in 0..self.positions.get(0).unwrap().len() {
             s += " ";
             s += &i.to_string();
-            s += " ";
+            if i < 10 {
+                s += " ";
+            }
         }
         s += "\n";
         for (i, v) in self.positions.iter().enumerate() {
@@ -123,7 +125,9 @@ impl Board {
             }
             s += " ";
             s += &i.to_string();
-            s += " ";
+            if i < 10 {
+                s += " ";
+            }
             for p in v {
                 if *p {
                     s += " X "
