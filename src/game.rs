@@ -3,6 +3,7 @@ use std::fmt;
 use std::thread::sleep;
 use std::time::Duration;
 use std::{env, io};
+/// The game struct is responsible for the game loop keeping track of time. 
 pub struct Game {
     board: Board,
     sleep_time: u32,

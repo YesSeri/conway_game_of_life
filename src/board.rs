@@ -1,5 +1,6 @@
 use crate::point::Point;
 use std::fmt;
+/// The board contains all the board logic and keeps track of iteration number. 
 #[derive(Debug, Clone)]
 pub struct Board {
     pub positions: Vec<Vec<bool>>,
@@ -25,13 +26,6 @@ impl Board {
         println!("Tick: {}", self.iter);
     }
     fn flips_state(&self, i: usize, j: usize) -> bool {
-        // Any live cell with fewer than two live neighbours dies, as if by underpopulation.
-        // Any live cell with two or three live neighbours lives on to the next generation.
-        // Any live cell with more than three live neighbours dies, as if by overpopulation.
-        // Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
-        // This can be shortened to the following:
-        // Live cell with less than two or more than three neighbours flips state. Dead cell with exactly three neighbours flip state.
-        // All other cells stays the same.
         let sum = self.sum_neighbours(i, j);
         let square = self.positions[i][j];
 
