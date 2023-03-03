@@ -3,20 +3,13 @@ use std::fmt;
 use std::thread::sleep;
 use std::time::Duration;
 use std::{env, io};
-/// The game struct is responsible for the game loop keeping track of time. 
+/// The game struct is responsible for the game loop keeping track of time.
 pub struct Game {
     board: Board,
-    sleep_time: u32,
+    sleep_time: usize,
 }
 impl Game {
-    pub fn new() -> Self {
-        let args: Vec<String> = env::args().collect();
-        let time = args
-            .get(1)
-            .unwrap_or(&String::from("1000"))
-            .parse()
-            .unwrap();
-        let size = args.get(2).unwrap_or(&String::from("10")).parse().unwrap();
+    pub fn new(time: usize, size: usize) -> Self {
         let vector = vec![vec![false; size]; size];
         Game {
             board: Board::from(vector),

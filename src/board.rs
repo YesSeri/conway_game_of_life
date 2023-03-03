@@ -1,6 +1,6 @@
 use crate::point::Point;
 use std::fmt;
-/// The board contains all the board logic and keeps track of iteration number. 
+/// The board contains all the board logic and keeps track of iteration number.
 #[derive(Debug, Clone)]
 pub struct Board {
     pub positions: Vec<Vec<bool>>,
@@ -105,23 +105,23 @@ impl Board {
     }
     pub fn print_with_idx(&self) {
         let mut s = String::from("   ");
-        for i in 0..self.positions.get(0).unwrap().len() {
-            s += " ";
-            s += &i.to_string();
-            if i < 10 {
-                s += " ";
-            }
-        }
+        // for i in 0..self.positions.get(0).unwrap().len() {
+        //     s += " ";
+        //     s += &i.to_string();
+        //     if i < 10 {
+        //         s += " ";
+        //     }
+        // }
         s += "\n";
         for (i, v) in self.positions.iter().enumerate() {
             if i != 0 {
                 s += "\n";
             }
             s += " ";
-            s += &i.to_string();
-            if i < 10 {
-                s += " ";
-            }
+            // s += &i.to_string();
+            // if i < 10 {
+            //     s += " ";
+            // }
             for p in v {
                 if *p {
                     s += " X "
